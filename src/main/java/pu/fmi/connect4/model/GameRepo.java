@@ -1,5 +1,6 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.model;
 
+import java.util.Collection;
 import java.util.UUID;
 
 public interface GameRepo {
@@ -9,5 +10,7 @@ public interface GameRepo {
 	Game get(UUID gameId);
 
 	void delete(Game game);
+
+    Collection<Game> listAll();
 
 }

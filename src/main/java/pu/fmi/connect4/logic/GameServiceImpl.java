@@ -1,12 +1,19 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.logic;
 
 import static java.lang.String.format;
+import static pu.fmi.connect4.model.Player.BLUE;
+import static pu.fmi.connect4.model.Player.RUBY;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import pu.fmi.connect4.model.Game;
+import pu.fmi.connect4.model.GameRepo;
+import pu.fmi.connect4.model.Player;
 
 @Component
 public class GameServiceImpl implements GameService {
@@ -34,50 +41,77 @@ public class GameServiceImpl implements GameService {
 	}
 
 	@Override
-	public void makeMove(Move move) {
-		var game = getGame(move.gameId());
+	public void makeMove(UUID gameId, Move move) {
+		var game = getGame(gameId);
 
-		validateGameIsNotOver(move, game);
-		validateTurn(move, game);
-		validateColumnIsNotFull(move, game);
+		validateGameIsNotOver(game, move);
+		validateTurn(game, move);
+		validateColumnIsNotFull(game, move);
 
-		int colTop = game.findColumnTop(move.column());
-		game.getBoard()[colTop + 1][move.column()] = move.player();
-
+		int colTop = findColumnTop(game, move.column());
+		game.getBoard()[colTop][move.column()] = move.player();
+		// TODO: Make switch which player is on turn
+		
 		if (checkIfPlayerWins(move.player(), game.getBoard())) {
 			game.setWinner(move.player());
 			game.setGameOver(true);
 			return;
 		}
 
-		if (game.isBoardFull()) {
+		if (isBoardFull(game)) {
 			game.setGameOver(true);
 		}
 	}
 
-	private void validateGameIsNotOver(Move move, Game game) {
+	private void validateGameIsNotOver(Game game, Move move) {
 		if (game.isGameOver()) {
-			throw new IllegalMoveException(move.gameId(),
+			throw new IllegalMoveException(game.getGameId(),
 				format("Move of player [%s] is not possible. Game [%s] is over",
 				move.player(), game.getGameId()));
 		}
 	}
 
-	private void validateColumnIsNotFull(Move move, Game game) {
-		if (game.isColumnFull(move.column())) {
-			throw new IllegalMoveException(move.gameId(),
+	private void validateColumnIsNotFull(Game game, Move move) {
+		if (isColumnFull(game, move.column())) {
+			throw new IllegalMoveException(game.getGameId(),
 				format("Move of player [%s] is not possible. Column [%d] of game [%s] is full",
 				move.player(), move.column(), game.getGameId()));
 		}
 	}
 
-	private void validateTurn(Move move, Game game) {
+	private void validateTurn(Game game, Move move) {
 		if (!game.getTurn().equals(move.player())) {
-			throw new IllegalMoveException(move.gameId(),
+			throw new IllegalMoveException(game.getGameId(),
 				format(
 					"Move of player [%s] is not possible. In game [%s] it is player [%s] turn",
 					move.player(), game.getGameId(), game.getTurn()));
 		}
+	}
+
+	int findColumnTop(Game game, int column) {
+		var board = game.getBoard();
+		for (int row = 0; row < Game.ROWS; row++) {
+			if (board[row][column] == null) {
+				return row;
+			}
+		}
+
+		return -1;
+	}
+
+	public boolean isColumnFull(Game game, int column) {
+		var board = game.getBoard();
+		return board[Game.ROWS - 1][column] != null;
+	}
+
+	public boolean isBoardFull(Game game) {
+		for (int col = 0; col < Game.COLUMS; col++) {
+			if (isColumnFull(game, col)) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	boolean checkIfPlayerWins(Player player, Player[][] board) {

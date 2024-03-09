@@ -1,5 +1,6 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.model;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,6 +33,11 @@ public class GameRepoInMemory implements GameRepo {
 	@Override
 	public void delete(Game game) {
 		games.remove(game.getGameId());
+	}
+
+	@Override
+	public Collection<Game> listAll() {
+		return games.values();
 	}
 
 	/**

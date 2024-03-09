@@ -1,4 +1,4 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.logic;
 
 import static java.lang.String.format;
 

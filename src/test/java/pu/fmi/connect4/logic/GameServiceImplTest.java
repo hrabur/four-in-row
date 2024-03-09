@@ -1,13 +1,16 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.logic;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pu.fmi.connect4.Player.BLUE;
-import static pu.fmi.connect4.Player.RUBY;
+import static pu.fmi.connect4.model.Player.BLUE;
+import static pu.fmi.connect4.model.Player.RUBY;
 
 import org.junit.jupiter.api.Test;
+
+import pu.fmi.connect4.model.GameRepoInMemory;
+import pu.fmi.connect4.model.Player;
 
 class GameServiceImplTest {
 
@@ -21,6 +24,19 @@ class GameServiceImplTest {
 		assertNotNull(game.getGameId());
 		var storedGame = gameRepo.get(game.getGameId());
 		assertEquals(game.getGameId(), storedGame.getGameId());
+	}
+
+	@Test
+	void testMakeMoveWithCorrectMove() {
+		var gameRepo = new GameRepoInMemory();
+		var gameService = new GameServiceImpl(gameRepo);
+		var game = gameService.startNewGame();
+
+		gameService.makeMove(game.getGameId(), new Move(BLUE, 1));
+
+		var storedGame = gameRepo.get(game.getGameId());
+		assertEquals(BLUE, storedGame.getBoard()[0][1]);
+		assertEquals(RUBY, game.getTurn());
 	}
 
 	@Test

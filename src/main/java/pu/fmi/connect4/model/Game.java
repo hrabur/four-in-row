@@ -1,4 +1,4 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.model;
 
 import java.util.UUID;
 
@@ -22,30 +22,6 @@ public class Game {
 		gameId = UUID.randomUUID();
 		turn = Player.BLUE;
 		board = new Player[ROWS][COLUMS];
-	}
-
-	public int findColumnTop(int column) {
-		for (int row = 0; row < ROWS; row++) {
-			if (board[row][column] == null) {
-				return row;
-			}
-		}
-
-		return -1;
-	}
-
-	public boolean isColumnFull(int column) {
-		return board[ROWS - 1][column] != null;
-	}
-
-	public boolean isBoardFull() {
-		for (int col = 0; col < COLUMS; col++) {
-			if (isColumnFull(col)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public UUID getGameId() {

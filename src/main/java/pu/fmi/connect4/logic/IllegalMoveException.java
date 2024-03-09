@@ -1,4 +1,4 @@
-package pu.fmi.connect4;
+package pu.fmi.connect4.logic;
 
 import java.util.UUID;
 
