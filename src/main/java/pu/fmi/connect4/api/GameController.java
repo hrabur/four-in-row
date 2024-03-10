@@ -1,6 +1,5 @@
 package pu.fmi.connect4.api;
 
-import java.util.Collection;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import pu.fmi.connect4.logic.GameService;
 import pu.fmi.connect4.logic.Move;
 import pu.fmi.connect4.model.Game;
-import pu.fmi.connect4.model.Player;
 
 @RestController
 @RequestMapping("/games")

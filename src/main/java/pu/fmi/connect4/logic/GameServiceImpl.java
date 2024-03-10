@@ -1,10 +1,6 @@
 package pu.fmi.connect4.logic;
 
 import static java.lang.String.format;
-import static pu.fmi.connect4.model.Player.BLUE;
-import static pu.fmi.connect4.model.Player.RUBY;
-
-import java.util.Collection;
 import java.util.UUID;
 
 import org.slf4j.Logger;
