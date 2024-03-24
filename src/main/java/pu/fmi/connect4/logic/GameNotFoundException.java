@@ -4,15 +4,9 @@ import static java.lang.String.format;
 
 import java.util.UUID;
 
-public class GameNotFoundException extends RuntimeException {
-    private final UUID gameId;
+public class GameNotFoundException extends GameException {
 
     public GameNotFoundException(UUID gameId) {
-        super(format("Game with ID [%s] does not exist", gameId));
-        this.gameId = gameId;
-    }
-
-    public UUID getGameId() {
-        return gameId;
+        super(gameId, format("Game with ID [%s] does not exist", gameId));
     }
 }

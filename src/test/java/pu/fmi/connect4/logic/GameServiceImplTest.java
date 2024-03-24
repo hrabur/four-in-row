@@ -4,44 +4,56 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static pu.fmi.connect4.model.Player.BLUE;
 import static pu.fmi.connect4.model.Player.RUBY;
 
-import org.junit.jupiter.api.Test;
+import java.util.Optional;
+import java.util.UUID;
 
-import pu.fmi.connect4.model.GameRepoInMemory;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import pu.fmi.connect4.model.GameRepository;
 import pu.fmi.connect4.model.Player;
 
+@ExtendWith(MockitoExtension.class)
 class GameServiceImplTest {
+
+    @Mock
+    private GameRepository gameRepo;
 
 	@Test
 	void testStartNewGame() {
-		var gameRepo = new GameRepoInMemory();
 		var gameService = new GameServiceImpl(gameRepo);
 		var game = gameService.startNewGame();
 
 		assertNotNull(game);
 		assertNotNull(game.getGameId());
-		var storedGame = gameRepo.get(game.getGameId());
-		assertEquals(game.getGameId(), storedGame.getGameId());
+        assertNotNull(game.getTurn());
+        assertEquals(0, game.getMoves().size());
+        verify(gameRepo).save(game);
 	}
 
 	@Test
 	void testMakeMoveWithCorrectMove() {
-		var gameRepo = new GameRepoInMemory();
 		var gameService = new GameServiceImpl(gameRepo);
 		var game = gameService.startNewGame();
+        when(gameRepo.findById(any(UUID.class))).thenReturn(Optional.of(game));
 
-		gameService.makeMove(game.getGameId(), new Move(BLUE, 1));
+		gameService.makeMove(game.getGameId(), new PlayerMove(BLUE, 1));
 
-		var storedGame = gameRepo.get(game.getGameId());
-		assertEquals(BLUE, storedGame.getBoard()[0][1]);
+		assertEquals(BLUE, game.getBoard()[0][1]);
 		assertEquals(RUBY, game.getTurn());
 	}
 
 	@Test
 	void testIsPalyerWins() {
-		GameServiceImpl gameService = new GameServiceImpl(new GameRepoInMemory());
+		GameServiceImpl gameService = new GameServiceImpl(gameRepo);
 
 		Player[][] noWinner = {
 			{ null, null, null, null, null, null, null },

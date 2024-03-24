@@ -1,5 +1,6 @@
 package pu.fmi.connect4.api;
 
+import java.util.Collection;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import pu.fmi.connect4.logic.GameService;
-import pu.fmi.connect4.logic.Move;
+import pu.fmi.connect4.logic.PlayerMove;
 import pu.fmi.connect4.model.Game;
 
 @RestController
@@ -38,7 +39,12 @@ public class GameController {
 	@PostMapping("/{gameId}/moves")
 	public void makeMove(
 			@PathVariable UUID gameId,
-			@RequestBody @Valid Move move) {
+			@RequestBody @Valid PlayerMove move) {
 		gameService.makeMove(gameId, move);
+	}
+	
+	@GetMapping
+	public Collection<Game> listGames() {
+		return gameService.listGames();
 	}
 }
