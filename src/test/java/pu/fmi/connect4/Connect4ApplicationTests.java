@@ -50,7 +50,7 @@ class Connect4ApplicationTests {
 	@Test
 	void testStartNewGame(@Autowired WebTestClient client) {
 		var timeBeforeGameStart = LocalDateTime.now();
-		client
+		Game game = client
 			.post()
 			.uri("/games")
 			.accept(MediaType.APPLICATION_JSON)
@@ -58,15 +58,16 @@ class Connect4ApplicationTests {
 			.expectStatus()
 			.isOk()
 			.expectBody(Game.class)
-			.value(game -> {
-				assertThat(game.getGameId()).isNotNull();
-				assertThat(game.getTurn()).isEqualTo(Player.BLUE);
-				assertThat(game.getMoves()).isEmpty();
-				assertThat(game.getStartTime())
-					.isAfter(timeBeforeGameStart)
-					.isBefore(LocalDateTime.now());
-				assertThat(game.getEndTime()).isNull();
-			});
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(game.getGameId()).isNotNull();
+		assertThat(game.getTurn()).isEqualTo(Player.BLUE);
+		assertThat(game.getMoves()).isEmpty();
+		assertThat(game.getStartTime())
+			.isAfter(timeBeforeGameStart)
+			.isBefore(LocalDateTime.now());
+		assertThat(game.getEndTime()).isNull();
 	}
 
 	@Test
