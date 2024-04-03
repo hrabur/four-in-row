@@ -164,6 +164,6 @@ public class GameServiceImpl implements GameService {
 
 	@Override
 	public Collection<Game> listGames() {
-		return gameRepository.findAll();
+		return gameRepository.findFirst10ByOrderByStartTimeDesc();
 	}
 }

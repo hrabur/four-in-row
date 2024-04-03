@@ -1,0 +1,18 @@
+.Pool {
+  width: 50px;
+  height: 50px; 
+  border-radius: 50%;
+  margin: 5px;
+}
+
+.Pool_placeholder {
+  background-color: #ddd;
+}
+
+.Pool_BLUE {
+  background-color: blue;
+}
+
+.Pool_RUBY {
+  background-color: red;
+}

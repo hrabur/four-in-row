@@ -1,0 +1,17 @@
+.Board_Grid {
+  border: 1px solid #ddd;
+}
+
+.Board_Selector, .Board_Message, .Board_Row  {
+  display: flex;
+}
+
+.Board_Selector {
+  padding-bottom: 10px;
+}
+
+.Board_Message {
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+}

@@ -32,13 +32,14 @@ public class Game {
 	private Player winner;
 	private boolean gameOver;
 
-	// TODO: Add start time property
+	private LocalDateTime startTime;
 	private LocalDateTime endTime;
 
 	public Game() {
 		gameId = UUID.randomUUID();
 		turn = Player.BLUE;
 		moves = new ArrayList<>();
+		startTime = LocalDateTime.now();
 	}
 
 	public UUID getGameId() {
@@ -94,6 +95,14 @@ public class Game {
 
 	public void setWinner(Player winner) {
 		this.winner = winner;
+	}
+
+	public LocalDateTime getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(LocalDateTime startTime) {
+		this.startTime = startTime;
 	}
 
 	public LocalDateTime getEndTime() {
